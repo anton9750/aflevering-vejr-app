@@ -18,3 +18,5 @@ Appen er bygget efter **MVC**:
 - CSS-animationer, `@property` og `conic-gradient` (roterende kant)
 - GitHub Actions + GitHub Pages
 
+link til figma design: https://www.figma.com/design/7pFMd2JjJIYoFWCqh4RV0N/Untitled?node-id=1-2&p=f
+

@@ -25,11 +25,33 @@ export function temperature(value) {
 }
 
 
+// viser nedbøren med type, fx "1.2 mm regn", "0.5 cm sne" eller begge
 export function rain(value) {
-  if (value == null) {
+
+  if (value == null || value.total == null) {
     return MISSING;
   }
-  return value.toFixed(1) + " mm";
+
+  const parts = [];
+
+  if (value.rain > 0) {
+    parts.push(value.rain.toFixed(1) + " mm regn");
+  }
+
+  if (value.snow > 0) {
+    parts.push(value.snow.toFixed(1) + " cm sne");
+  }
+
+  // nedbør, der hverken er regn eller sne (fx slud eller hagl)
+  if (parts.length === 0 && value.total > 0) {
+    parts.push(value.total.toFixed(1) + " mm nedbør");
+  }
+
+  if (parts.length === 0) {
+    return "Ingen nedbør";
+  }
+
+  return parts.join(" + ");
 }
 
 

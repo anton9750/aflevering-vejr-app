@@ -1,13 +1,13 @@
 // MODEL - henter data fra Open-Meteo
 
 const API_URL = "https://api.open-meteo.com/v1/forecast"
-  + "?current=temperature_2m,wind_speed_10m,wind_direction_10m,precipitation,weather_code"
-  + "&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum"
-  + "&hourly=temperature_2m,precipitation,weather_code,wind_speed_10m,wind_direction_10m"
+  + "?current=temperature_2m,wind_speed_10m,wind_direction_10m,precipitation,rain,showers,snowfall,weather_code"
+  + "&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,rain_sum,showers_sum,snowfall_sum"
+  + "&hourly=temperature_2m,precipitation,rain,showers,snowfall,weather_code,wind_speed_10m,wind_direction_10m"
   + "&timezone=auto&forecast_days=5&wind_speed_unit=ms";
 
 
-const STORAGE_KEY = "vejr-data";
+const STORAGE_KEY = "vejr-data-v2"; // nyt navn, fordi data nu også har regn og sne
 
 
 export async function getWeather(location) {
@@ -70,6 +70,17 @@ function loadSaved() {
 }
 
 
+// samler nedbøren, så vi kan se om det er regn eller sne
+// (regn og byger er i mm, sne er i cm)
+function precipitation(total, rain, showers, snow) {
+  return {
+    total: total,
+    rain: (rain || 0) + (showers || 0),
+    snow: snow || 0
+  };
+}
+
+
 // laver data om til en liste med 5 dage, hvor hver dag har sine timer
 function makeDays(data) {
 
@@ -81,7 +92,12 @@ function makeDays(data) {
       code: data.daily.weather_code[i],
       max: data.daily.temperature_2m_max[i],
       min: data.daily.temperature_2m_min[i],
-      rain: data.daily.precipitation_sum[i],
+      rain: precipitation(
+        data.daily.precipitation_sum[i],
+        data.daily.rain_sum[i],
+        data.daily.showers_sum[i],
+        data.daily.snowfall_sum[i]
+      ),
       hours: []
     });
   }
@@ -98,7 +114,12 @@ function makeDays(data) {
       day.hours.push({
         time: data.hourly.time[i].slice(11, 16),
         temp: data.hourly.temperature_2m[i],
-        rain: data.hourly.precipitation[i],
+        rain: precipitation(
+          data.hourly.precipitation[i],
+          data.hourly.rain[i],
+          data.hourly.showers[i],
+          data.hourly.snowfall[i]
+        ),
         code: data.hourly.weather_code[i],
         wind: data.hourly.wind_speed_10m[i],
         windDir: data.hourly.wind_direction_10m[i]
@@ -109,7 +130,12 @@ function makeDays(data) {
   return {
     now: {
       temp: data.current.temperature_2m,
-      rain: data.current.precipitation,
+      rain: precipitation(
+        data.current.precipitation,
+        data.current.rain,
+        data.current.showers,
+        data.current.snowfall
+      ),
       code: data.current.weather_code,
       wind: data.current.wind_speed_10m,
       windDir: data.current.wind_direction_10m

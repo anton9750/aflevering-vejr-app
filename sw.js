@@ -1,6 +1,6 @@
 // skift versionen når filerne ændres, så gamle caches bliver slettet
-const STATIC_CACHE = "vejr-static-v13";
-const API_CACHE = "vejr-api-v1";
+const STATIC_CACHE = "vejr-static-v15";
+const API_CACHE = "vejr-api-v2";
 
 const FILES = [
   "./",
@@ -70,7 +70,7 @@ self.addEventListener("fetch", function (event) {
   if (url.hostname === "api.open-meteo.com") {
     event.respondWith(networkFirst(event.request));
   } else if (url.origin === self.location.origin) {
-    event.respondWith(staleWhileRevalidate(event, event.request));
+    event.respondWith(cacheFirst(event.request));
   }
 });
 
@@ -106,26 +106,27 @@ async function networkFirst(request) {
 }
 
 
-// Statiske filer: svar straks fra cache, men hent en ny version i baggrunden,
-// så ændringer i koden når frem ved næste besøg
-async function staleWhileRevalidate(event, request) {
+// Statiske filer: cache first, fallback til nettet.
+// Nye versioner af filerne kommer frem, når STATIC_CACHE får et nyt nummer.
+async function cacheFirst(request) {
 
   const cache = await caches.open(STATIC_CACHE);
   const cached = await cache.match(request);
 
-  const update = fetch(request).then(function (response) {
-    if (response.ok) {
-      cache.put(request, response.clone()).catch(function (error) {
-        console.warn("Kunne ikke gemme i cache:", error);
-      });
-    }
-    return response;
-  });
-
   if (cached) {
-    event.waitUntil(update.catch(function () {}));
     return cached;
   }
 
-  return update;
+  // ikke i cachen - hent fra nettet og gem til næste gang
+  const response = await fetch(request);
+
+  if (response.ok) {
+    try {
+      await cache.put(request, response.clone());
+    } catch (error) {
+      console.warn("Kunne ikke gemme i cache:", error);
+    }
+  }
+
+  return response;
 }

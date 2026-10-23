@@ -25,7 +25,7 @@ body {
 
 h1 {
   text-align: center;
-  font-size: 2.4rem;
+  font-size: clamp(1.8rem, 1.2rem + 3vw, 2.4rem);
   margin: 0.5rem 0 1rem;
   background: linear-gradient(90deg, var(--green), var(--blue), var(--orange));
   -webkit-background-clip: text;
@@ -38,11 +38,28 @@ h1 {
   text-align: center;
 }
 
+/* flex-wrap i stedet for breakpoints: sektionerne står ved siden af hinanden,
+   når der er plads, og lægger sig under hinanden, når skærmen bliver smal */
 main {
   max-width: 900px;
   margin: 0 auto;
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
+}
+
+main > section {
+  flex: 1 1 100%;
+  min-width: 0;
+}
+
+/* "Lige nu" og "5 dages udsigt" deler en række i forholdet 1:2 */
+main > section:nth-child(1) {
+  flex: 1 1 15rem;
+}
+
+main > section:nth-child(2) {
+  flex: 2 1 26rem;
 }
 
 /* vinklen skal registreres, så browseren kan animere den */
@@ -108,7 +125,7 @@ h2 {
   align-items: center;
   gap: 0.25rem;
   padding: 0.6rem 0.2rem;
-  font-size: 0.8rem;
+  font-size: clamp(0.75rem, 0.6rem + 0.5vw, 1rem);
   color: var(--ink);
   background: linear-gradient(160deg, #ffffff, #eafaf2);
   border: 1px solid rgba(43, 182, 115, 0.35);
@@ -135,9 +152,11 @@ ul {
   margin: 0;
 }
 
+/* tid, ikon, temp. og nedbør står altid på række; vinden flytter ned
+   på sin egen linje, når der ikke er plads */
 .hour {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.25rem;
   padding: 0.5rem 0.5rem;
@@ -153,9 +172,12 @@ ul {
   background: rgba(255, 140, 66, 0.15);
 }
 
-/* på mobil får vinden sin egen linje */
-.hour-wind {
-  grid-column: 1 / -1;
+.hour > span {
+  flex: 1 1 3.5rem;
+}
+
+.hour > .hour-wind {
+  flex: 2 1 9rem;
 }
 
 footer {
@@ -171,30 +193,6 @@ a {
 
 a:hover {
   color: var(--orange);
-}
-
-/* Større skærme */
-@media (min-width: 700px) {
-
-  main {
-    grid-template-columns: 1fr 2fr;
-  }
-
-  .day-view {
-    grid-column: 1 / -1;
-  }
-
-  .day-card {
-    font-size: 1rem;
-  }
-
-  .hour {
-    grid-template-columns: 1fr 1fr 1fr 1fr 2fr;
-  }
-
-  .hour-wind {
-    grid-column: auto;
-  }
 }
 
 /* Loader */
@@ -368,7 +366,7 @@ body.halloween #halloween-toggle {
 body.halloween h1 {
   font-family: "Creepster", "Chiller", cursive;
   font-weight: 400;
-  font-size: 3.2rem;
+  font-size: clamp(2.2rem, 1.4rem + 4vw, 3.2rem);
   letter-spacing: 0.06em;
   background: none;
   color: #ff7518;
@@ -423,19 +421,20 @@ body.halloween #halloween-decor {
   pointer-events: none;
 }
 
+/* størrelse og afstand skalerer med skærmen, så der ikke skal breakpoints til */
 .pumpkin {
   position: absolute;
-  font-size: 3.5rem;
+  font-size: clamp(2rem, 4vw, 3.5rem);
   filter: drop-shadow(0 0 12px rgba(255, 117, 24, 0.9));
   animation: bob 3s ease-in-out infinite;
 }
 
 .pumpkin.left {
-  left: 1.5rem;
+  left: clamp(0.25rem, 2vw, 1.5rem);
 }
 
 .pumpkin.right {
-  right: 1.5rem;
+  right: clamp(0.25rem, 2vw, 1.5rem);
 }
 
 @keyframes bob {
@@ -450,22 +449,6 @@ body.halloween #halloween-decor {
   98% { opacity: 0.75; }
 }
 
-/* på smalle skærme er der ikke plads i siderne, så lygterne bliver små og svage */
-@media (max-width: 1050px) {
-  .pumpkin {
-    font-size: 2rem;
-    opacity: 0.35;
-  }
-
-  .pumpkin.left {
-    left: 0.25rem;
-  }
-
-  .pumpkin.right {
-    right: 0.25rem;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .pumpkin,
   body.halloween h1 {
@@ -473,11 +456,9 @@ body.halloween #halloween-decor {
   }
 }
 
-/* på mobil skal knappen ikke ligge oven i overskriften */
-@media (max-width: 600px) {
-  body:has(#halloween-toggle:not([hidden])) {
-    padding-top: 3.5rem;
-  }
+/* knappen må ikke ligge oven i overskriften */
+body:has(#halloween-toggle:not([hidden])) {
+  padding-top: 3.5rem;
 }
 
 /* i halloween-tema skal solen ikke gøre baggrunden lys */

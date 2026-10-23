@@ -1,7 +1,7 @@
 // VIEW - sætter HTML ind på siden
 
-import { nowSection, forecastSection, daySection } from "./components/organisms.js";
-import { showWeatherEffect } from "./helpers/weatherEffect.js";
+import { nowSection, forecastSection, daySection } from "../components/organisms.js";
+import { showWeatherEffect } from "../helpers/weatherEffect.js";
 
 const app = document.getElementById("app");
 const status = document.getElementById("status");

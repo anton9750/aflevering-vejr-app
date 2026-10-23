@@ -1,7 +1,7 @@
 // CONTROLLER - binder model og view sammen
 
-import { getWeather } from "./model.js";
-import { render, showStatus, showPlace } from "./view.js";
+import { getWeather } from "./model/model.js";
+import { render, showStatus, showPlace } from "./views/view.js";
 import { getLocation } from "./helpers/location.js";
 
 let weather = null;

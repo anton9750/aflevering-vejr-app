@@ -1,8 +1,7 @@
 // MODEL - henter data fra Open-Meteo
 
 const API_URL = "https://api.open-meteo.com/v1/forecast"
-  + "?latitude=57.05&longitude=9.92"
-  + "&current=temperature_2m,wind_speed_10m,wind_direction_10m,precipitation,weather_code"
+  + "?current=temperature_2m,wind_speed_10m,wind_direction_10m,precipitation,weather_code"
   + "&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum"
   + "&hourly=temperature_2m,precipitation,weather_code,wind_speed_10m,wind_direction_10m"
   + "&timezone=auto&forecast_days=5&wind_speed_unit=ms";
@@ -11,16 +10,19 @@ const API_URL = "https://api.open-meteo.com/v1/forecast"
 const STORAGE_KEY = "vejr-data";
 
 
-export async function getWeather() {
+export async function getWeather(location) {
 
   // brug de gemte data, hvis de er hentet i den samme hele time (fx mellem 10:00 og 10:59)
+  // og for det samme sted
   const saved = loadSaved();
 
-  if (saved && sameHour(saved.fetchedAt, Date.now())) {
+  if (saved && sameHour(saved.fetchedAt, Date.now()) && samePlace(saved, location)) {
     return makeDays(saved.data);
   }
 
-  const response = await fetch(API_URL);
+  const url = API_URL + "&latitude=" + location.latitude + "&longitude=" + location.longitude;
+
+  const response = await fetch(url);
 
   if (!response.ok) {
     throw new Error("Fejl: " + response.status);
@@ -29,7 +31,12 @@ export async function getWeather() {
   const data = await response.json();
 
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ fetchedAt: Date.now(), data: data }));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      fetchedAt: Date.now(),
+      latitude: location.latitude,
+      longitude: location.longitude,
+      data: data
+    }));
   } catch (error) {
     // localStorage kan være slået fra - så henter vi bare hver gang
   }
@@ -41,6 +48,11 @@ export async function getWeather() {
 function sameHour(a, b) {
   const hour = 60 * 60 * 1000;
   return Math.floor(a / hour) === Math.floor(b / hour);
+}
+
+
+function samePlace(saved, location) {
+  return saved.latitude === location.latitude && saved.longitude === location.longitude;
 }
 
 

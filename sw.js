@@ -1,5 +1,5 @@
 // skift versionen når filerne ændres, så gamle caches bliver slettet
-const STATIC_CACHE = "vejr-static-v8";
+const STATIC_CACHE = "vejr-static-v10";
 const API_CACHE = "vejr-api-v1";
 
 const FILES = [
@@ -7,6 +7,10 @@ const FILES = [
   "./index.html",
   "./manifest.json",
   "./css/style.css",
+  "./icons/icon-192.png",
+  "./icons/icon-512.png",
+  "./icons/icon-512-maskable.png",
+  "./icons/apple-touch-icon.png",
   "./js/main.js",
   "./js/model.js",
   "./js/view.js",
@@ -14,6 +18,7 @@ const FILES = [
   "./js/helpers/weatherCodes.js",
   "./js/helpers/windDirection.js",
   "./js/helpers/weatherEffect.js",
+  "./js/helpers/location.js",
   "./js/components/atoms.js",
   "./js/components/molecules.js",
   "./js/components/organisms.js"

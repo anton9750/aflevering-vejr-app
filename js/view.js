@@ -5,10 +5,21 @@ import { showWeatherEffect } from "./helpers/weatherEffect.js";
 
 const app = document.getElementById("app");
 const status = document.getElementById("status");
+const title = document.getElementById("title");
 
 
 export function showStatus(text) {
   status.textContent = text;
+}
+
+
+// name er null, når vi bruger brugerens egen position
+export function showPlace(name) {
+  if (name) {
+    title.textContent = "Vejr i " + name;
+  } else {
+    title.textContent = "Vejret hvor du er";
+  }
 }
 
 

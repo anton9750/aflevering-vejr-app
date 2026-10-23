@@ -1,7 +1,8 @@
 // CONTROLLER - binder model og view sammen
 
 import { getWeather } from "./model.js";
-import { render, showStatus } from "./view.js";
+import { render, showStatus, showPlace } from "./view.js";
+import { getLocation } from "./helpers/location.js";
 
 let weather = null;
 let selectedDay = 0;
@@ -32,8 +33,13 @@ function updateEveryWholeHour() {
 
 async function update() {
 
+  // getLocation fejler aldrig - den giver Aalborg, hvis positionen ikke kan findes
+  const location = await getLocation();
+
+  showPlace(location.name);
+
   try {
-    weather = await getWeather();
+    weather = await getWeather(location);
   } catch (error) {
     showStatus("Kunne ikke hente vejret. Prøv igen senere.");
     return;

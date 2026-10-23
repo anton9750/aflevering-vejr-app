@@ -119,7 +119,7 @@ h2 {
 
 .day-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 6px 16px rgba(30, 136, 229, 0.25);
+  box-shadow: 0 6px 16px rgba(29, 136, 229, 0.25);
 }
 
 .day-card.selected {

@@ -1,7 +1,4 @@
 import { start } from "./controller.js";
-import { setupHalloween } from "./helpers/halloween.js";
-
-setupHalloween();
 
 start();
 
@@ -15,7 +12,6 @@ setTimeout(function () {
     loader.classList.add("hidden");
   }
 }, 1000);
-
 
 async function registerServiceWorker() {
 

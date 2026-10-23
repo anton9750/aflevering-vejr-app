@@ -70,8 +70,3 @@ Siden ligger derefter på `https://<brugernavn>.github.io/<repo>/`. Fordi GitHub
 - CSS-animationer, `@property` og `conic-gradient` (roterende kant)
 - GitHub Actions + GitHub Pages
 
-## Kilder
-
-- Vejrdata: [Open-Meteo.com](https://open-meteo.com/)
-- Skrifttype i Halloween-tema: [Creepster](https://fonts.google.com/specimen/Creepster) fra Google Fonts
->>>>>>> 14d6492b40535484118901044243c8795efb9c83

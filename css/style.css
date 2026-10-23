@@ -320,3 +320,175 @@ a:hover {
   .drop, .ray { animation: none; }
   .drop { display: none; }
 }
+
+/* Halloween-knap (vises kun i oktober) */
+#halloween-toggle {
+  position: fixed;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 10;
+  padding: 0.5rem 0.9rem;
+  border: 2px solid var(--orange);
+  border-radius: 999px;
+  background: white;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+#halloween-toggle[hidden] {
+  display: none;
+}
+
+#halloween-decor {
+  display: none;
+}
+
+/* Halloween-tema */
+body.halloween {
+  --green: #ff7518;
+  --blue: #ffb347;
+  --orange: #ff4500;
+  --ink: #f5e6d3;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 117, 24, 0.35), transparent 50%),
+    radial-gradient(circle at 50% 100%, rgba(120, 40, 140, 0.35), transparent 55%),
+    #0d0b0a;
+  background-attachment: fixed;
+}
+
+body.halloween #halloween-toggle {
+  background: #ff7518;
+  border-color: #1a1410;
+  color: #1a1410;
+}
+
+body.halloween h1 {
+  font-family: "Creepster", "Chiller", cursive;
+  font-weight: 400;
+  font-size: 3.2rem;
+  letter-spacing: 0.06em;
+  background: none;
+  color: #ff7518;
+  text-shadow: 0 0 8px #ff4500, 0 0 24px rgba(255, 69, 0, 0.6), 3px 3px 0 #000;
+  animation: flicker 3s infinite;
+}
+
+body.halloween section {
+  background:
+    linear-gradient(#1a1410, #1a1410) padding-box,
+    conic-gradient(from var(--angle), #ff7518, #000, #ff4500, #000, #ff7518) border-box;
+  box-shadow: 0 0 25px rgba(255, 117, 24, 0.25);
+}
+
+body.halloween h2,
+body.halloween .arrow,
+body.halloween a {
+  color: #ff9a3c;
+}
+
+body.halloween .big-temp {
+  background: linear-gradient(135deg, #ffb347, #ff4500);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+body.halloween .day-card {
+  background: #241a12;
+  border-color: rgba(255, 117, 24, 0.4);
+  color: var(--ink);
+}
+
+body.halloween .day-card.selected {
+  background: linear-gradient(145deg, #ff7518, #ff4500);
+  color: #000;
+}
+
+body.halloween .hour {
+  border-top-color: rgba(255, 117, 24, 0.2);
+}
+
+body.halloween .hour:nth-child(odd) {
+  background: rgba(255, 117, 24, 0.06);
+}
+
+/* græskarlygter i siderne */
+body.halloween #halloween-decor {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.pumpkin {
+  position: absolute;
+  font-size: 3.5rem;
+  filter: drop-shadow(0 0 12px rgba(255, 117, 24, 0.9));
+  animation: bob 3s ease-in-out infinite;
+}
+
+.pumpkin.left {
+  left: 1.5rem;
+}
+
+.pumpkin.right {
+  right: 1.5rem;
+}
+
+@keyframes bob {
+  50% { transform: translateY(-12px) rotate(-6deg); }
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  92% { opacity: 1; }
+  94% { opacity: 0.6; }
+  96% { opacity: 1; }
+  98% { opacity: 0.75; }
+}
+
+/* på smalle skærme er der ikke plads i siderne, så lygterne bliver små og svage */
+@media (max-width: 1050px) {
+  .pumpkin {
+    font-size: 2rem;
+    opacity: 0.35;
+  }
+
+  .pumpkin.left {
+    left: 0.25rem;
+  }
+
+  .pumpkin.right {
+    right: 0.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pumpkin,
+  body.halloween h1 {
+    animation: none;
+  }
+}
+
+/* på mobil skal knappen ikke ligge oven i overskriften */
+@media (max-width: 600px) {
+  body:has(#halloween-toggle:not([hidden])) {
+    padding-top: 3.5rem;
+  }
+}
+
+/* i halloween-tema skal solen ikke gøre baggrunden lys */
+body.halloween #weather-fx.sun {
+  background: radial-gradient(circle at 0% 0%, rgba(255, 117, 24, 0.18), transparent 45%);
+}
+
+body.halloween .ray {
+  background: linear-gradient(90deg, transparent, rgba(255, 117, 24, 0.08), transparent);
+}
+
+body.halloween .day-card.selected {
+  box-shadow: 0 6px 18px rgba(255, 69, 0, 0.5);
+}

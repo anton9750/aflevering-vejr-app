@@ -1,4 +1,7 @@
 import { start } from "./controller.js";
+import { setupHalloween } from "./helpers/halloween.js";
+
+setupHalloween();
 
 start();
 

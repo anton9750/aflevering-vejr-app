@@ -17,7 +17,12 @@ export async function getWeather(location) {
   const saved = loadSaved();
 
   if (saved && sameHour(saved.fetchedAt, Date.now()) && samePlace(saved, location)) {
-    return makeDays(saved.data);
+    try {
+      return makeDays(saved.data);
+    } catch (error) {
+      // de gemte data er ødelagte - så henter vi nye nedenfor
+      console.warn("Gemte vejrdata kunne ikke bruges:", error);
+    }
   }
 
   const url = API_URL + "&latitude=" + location.latitude + "&longitude=" + location.longitude;

@@ -41,6 +41,7 @@ async function update() {
   try {
     weather = await getWeather(location);
   } catch (error) {
+    console.error("Kunne ikke hente vejret:", error);
     showStatus("Kunne ikke hente vejret. Prøv igen senere.");
     return;
   }
@@ -56,6 +57,7 @@ function draw() {
   try {
     render(weather, selectedDay, changeDay);
   } catch (error) {
+    console.error("Kunne ikke vise vejret:", error);
     showStatus("Noget gik galt med at vise vejret.");
   }
 }

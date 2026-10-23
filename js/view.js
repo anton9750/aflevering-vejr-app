@@ -28,7 +28,11 @@ export function render(weather, selectedDay, onDayClick) {
   // husk om brugeren stod på en dag-knap, så fokus ikke forsvinder
   const hadFocus = document.activeElement !== null && document.activeElement.classList.contains("day-card");
 
-  showWeatherEffect(weather.now.code);
+  try {
+    showWeatherEffect(weather.now.code);
+  } catch (error) {
+    console.warn("Vejreffekten kunne ikke vises:", error);
+  }
 
   app.innerHTML =
     nowSection(weather.now) +

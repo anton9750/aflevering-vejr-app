@@ -1,5 +1,5 @@
 // skift versionen når filerne ændres, så gamle caches bliver slettet
-const STATIC_CACHE = "vejr-static-v10";
+const STATIC_CACHE = "vejr-static-v11";
 const API_CACHE = "vejr-api-v1";
 
 const FILES = [
@@ -83,7 +83,12 @@ async function networkFirst(request) {
     const response = await fetch(request);
 
     if (response.ok) {
-      await cache.put(request, response.clone());
+      try {
+        await cache.put(request, response.clone());
+      } catch (error) {
+        // svaret er stadig fint, det blev bare ikke gemt
+        console.warn("Kunne ikke gemme API-svar:", error);
+      }
     }
 
     return response;
@@ -109,7 +114,9 @@ async function staleWhileRevalidate(event, request) {
 
   const update = fetch(request).then(function (response) {
     if (response.ok) {
-      cache.put(request, response.clone());
+      cache.put(request, response.clone()).catch(function (error) {
+        console.warn("Kunne ikke gemme i cache:", error);
+      });
     }
     return response;
   });
